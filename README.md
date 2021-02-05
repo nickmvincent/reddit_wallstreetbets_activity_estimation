@@ -1,3 +1,11 @@
+For the main content, see `analyze-wsb`, either as a html file or as a ipynb notebook.
+
+`collect-wsb.ipynb` includes the code used to collect data. 
+Currently, the data is not saved to this repo as it is rather large, although we're happy to try to share if there's interest.
+
+Below is the first markdown cell from `analyze-wsb`.
+
+
 # Can Online Platforms Benefit from Hosting Collective Action? Estimating the Amount of Reddit Activity Attributable to r/wallstreetbets in Jan 2021
 ## Nicholas Vincent and Hanlin Li, Northwestern University
 
