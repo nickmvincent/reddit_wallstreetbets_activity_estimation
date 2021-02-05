@@ -1,0 +1,4 @@
+praw
+requests-cache
+asyncpraw
+statsmodels==0.12.2
