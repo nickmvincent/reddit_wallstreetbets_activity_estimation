@@ -14259,73 +14259,121 @@ a.anchor-link {
 
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Can-Online-Platforms-Benefit-from-Hosting-Collective-Action?-Estimating-the-Amount-of-Reddit-Activity-Attributable-to-r/wallstreetbets-in-Jan-2021">Can Online Platforms Benefit from Hosting Collective Action? Estimating the Amount of Reddit Activity Attributable to r/wallstreetbets in Jan 2021<a class="anchor-link" href="#Can-Online-Platforms-Benefit-from-Hosting-Collective-Action?-Estimating-the-Amount-of-Reddit-Activity-Attributable-to-r/wallstreetbets-in-Jan-2021">&#182;</a></h1><h2 id="Nicholas-Vincent-and-Hanlin-Li,-Northwestern-University">Nicholas Vincent and Hanlin Li, Northwestern University<a class="anchor-link" href="#Nicholas-Vincent-and-Hanlin-Li,-Northwestern-University">&#182;</a></h2><p>First a caveat, and a TLDR!</p>
-<p><em>Preface/caveat: This is a rough draft work-in-progress notebook, intended as an early
-contribution to discussions around r/wallstreetbets GameStop short squeeze and its implications
+<h1 id="Can-Online-Platforms-Benefit-from-Hosting-Collective-Action?-Estimating-the-Amount-of-Reddit-Activity-Attributable-to-r/wallstreetbets-in-January-2021">Can Online Platforms Benefit from Hosting Collective Action? Estimating the Amount of Reddit Activity Attributable to r/wallstreetbets in January 2021<a class="anchor-link" href="#Can-Online-Platforms-Benefit-from-Hosting-Collective-Action?-Estimating-the-Amount-of-Reddit-Activity-Attributable-to-r/wallstreetbets-in-January-2021">&#182;</a></h1><h2 id="Nicholas-Vincent-and-Hanlin-Li,-Northwestern-University">Nicholas Vincent and Hanlin Li, Northwestern University<a class="anchor-link" href="#Nicholas-Vincent-and-Hanlin-Li,-Northwestern-University">&#182;</a></h2><h3 id="Last-updated-Feb-8,-2020">Last updated Feb 8, 2020<a class="anchor-link" href="#Last-updated-Feb-8,-2020">&#182;</a></h3><h2 id="Preface-and-TLDR">Preface and TLDR<a class="anchor-link" href="#Preface-and-TLDR">&#182;</a></h2><p><em>Preface/caveat: This is a rough draft/work-in-progress notebook, intended as an early
+contribution to discussions around r/wallstreetbets GameStop short squeeze and resulting implications
 for social computing. We are open to all sorts of critiques and suggestions
 regarding the framing, assumptions, and methods choices. The first author takes
 all responsibility for errors in code or claims</em>.</p>
-<p><em>Summary/TLDR: using a sample of reddit submissions (sampled using random one minute time windows), we estimate
-that r/wallstreetbets was responsible for 1.63-1.72% of all Reddit posts, 0.74-1.21% of all comments, and 0.42-1.17% of total "post scores" in January 2021,
-primarily driven by the surge of activity at the end of the month. These estimates suggest
-that platforms like reddit may have a
-strong incentive to support future instances of "collective action" that are similar to
+<p><em>Summary/TLDR: using a sample of reddit submissions (sampled by collecting all submissions for a
+random set of one minute time windows), we estimate that r/wallstreetbets was responsible for
+1.63-1.72% of all Reddit posts, 0.74-1.21% of all comments, and 0.42-1.17% of
+total "post scores" in January 2021,
+driven by the surge of activity at the end of the month. 
+These estimates suggest that platforms like reddit may have a
+powerful incentive to support future instances of "collective action" that are similar to
 the "r/wallstreetbets short squeeze".</em></p>
-<p>The beginning of the <a href="https://en.wikipedia.org/wiki/GameStop_short_squeeze">2021 GameStop short squeeze</a>
-has been attributed to users of the subreddit r/wallstreetbets. For brevity, we'll refer to this (ongoing) event
-as the "WSB squeeze".
-While it's challenging to prove exactly how much responsibility to assign to the subreddit,
+<h2 id="Motivation">Motivation<a class="anchor-link" href="#Motivation">&#182;</a></h2><p>The beginning of the <a href="https://en.wikipedia.org/wiki/GameStop_short_squeeze">2021 GameStop short squeeze</a>
+has been attributed to users of the subreddit r/wallstreetbets. 
+For brevity, we'll refer to this (ongoing) event as the "WSB squeeze".
+While it is a challenging task to prove exactly how responsible subreddit members were for ensuing market movement,
 media coverage suggests that (1) the subreddit had a major influence on the WSB short squeeze and
 (2) the subreddit recevied massive activity during this period.</p>
-<p>Specifically, Morse, writing for Mashable, reported that wallstreetbets was responsible for
- recording breaking <a href="https://mashable.com/article/reddit-wallstreetbets-subreddit-record-traffic-gamestop/">massive traffic</a> (73M views in 24 hours).
-Ghost, writing for Business Insider, summarized evidence from <a href="https://frontpagemetrics.com/">FrontPage Metrics</a> regarding
-r/wallstreetbet's <a href="https://www.businessinsider.com/wallstreetbets-fastest-growing-subreddit-hits-58-million-users-2021-1">massive gain in userbase</a>.
-A <a href="https://old.reddit.com/r/theoryofwsb/comments/l8uom9/press_roundup_through_30_january_2021/">post</a> on r/theoryofwsb highlights the enormous amount of media attention.</p>
+<p>Several articles in the media suggest measurable changes in reddit activity. 
+Morse, writing for Mashable, reported that wallstreetbets was responsible for
+record breaking
+<a href="https://mashable.com/article/reddit-wallstreetbets-subreddit-record-traffic-gamestop/">massive traffic</a>
+(73M views in 24 hours).
+Ghost, writing for Business Insider, summarized evidence from
+<a href="https://frontpagemetrics.com/">FrontPage Metrics</a> regarding
+r/wallstreetbet's
+<a href="https://www.businessinsider.com/wallstreetbets-fastest-growing-subreddit-hits-58-million-users-2021-1">massive gain in userbase</a>.
+Several round-up posts <a href="https://old.reddit.com/r/theoryofwsb/comments/l8uom9/press_roundup_through_30_january_2021/">(example)</a>
+on old.reddit.com/r/theoryofwsb highlight the enormous amount of media attention the WSB squeeze received.</p>
 <p>Building on the massive interest in the WSB squeeze, in this notebook, we will attempt to use a sample of reddit submissions to estimate the total
-number of posts, comments, and upvotes attributable to wallstreetbets in January 2021.</p>
-<p>Our intended primary contribution is to provide an easy-to-replicate estimate of total Reddit activity (that does not require
-downloading all reddit submissions for a time period). 
-This estimate can provide insight into how much online platforms like
+number of posts, comments, and upvotes attributable to r/wallstreetbets in January 2021.</p>
+<h2 id="Contributions">Contributions<a class="anchor-link" href="#Contributions">&#182;</a></h2><p>Our intended primary contribution is to estimate, in a fast and easy-to-replicate manner,
+reddit the amount of activity from a a particular subreddit relative to all reddit activity.
+Specifically, we ask "How many posts, comments, and upvotes did r/wallstreetbets users contribute in Jan 2021", and
+how do these figures compare to overall levels of reddit activity?</p>
+<p>We argue that these estimates provide insight into how much online platforms like
 reddit stand to benefit from being the "host" of attention grabbing collective efforts like
-the WSB squeeze . We note that <a href="https://redditblog.com/2020/12/08/reddits-2020-year-in-review/">reddit itself</a> uses submissions and comments
-as measurements of overall activity, and it seems likely that these activity measurements correlate with ad revenue (though
+the WSB squeeze.
+<a href="https://redditblog.com/2020/12/08/reddits-2020-year-in-review/">reddit itself</a> uses submissions and comments
+as measurements of overall activity,
+and it seems likely that these activity measurements correlate with ad revenue (though
 as we will discuss below, unusual events like the short squeeze may challenge this assumption).</p>
-<p>Our secondary contribution is to explore the use of "time window" sampling for reddit. Specfically,
-because of the large amount of activity on Reddit, it can be challenging to <em>quickly</em> measure something like
-the number of total posts on a large, active subreddit such as r/wallstreetbet. While pushshift.io provides
-data dumps for past reddit data, very recent data can only be accessed via API. Exactly measuring
-the number of posts (or comments, or post score), would require downloading every reddit post, creating
-a large time cost in terms of API calls (for both the researcher and the API provider, i.e. pushshift)
-and the need to use a large amount of disk space (which may be fine for well resourced researchers, but makes it harder
+<p>That is, we are motivated the idea that regardless of the nth-order effects of
+an instance of collective action, platforms stand to benefit from any overall
+increase in engagement, and measuring this engagement. This motivation
+draws on work
+that seeks to make invisible labor of data generation visible
+(see e.g. <a href="https://data-feminism.mitpress.mit.edu/">data feminism</a> and <a href="https://arxiv.org/abs/2012.09995">data leverage</a>).</p>
+<p>Our secondary contribution is to explore the use of "time window" sampling of reddit submissions.
+Specfically, because of the large amount of activity on Reddit
+(e.g. around 30M submissions per month in 2020),
+it can be challenging to <em>quickly</em> measure something like
+the number of total posts on reddit during a period of heavy activity.
+While pushshift.io provides complete data dumps for historical reddit data,
+very recent data can only be accessed via API (which is understandably rate limited). 
+Exactly measuring number of posts (or number of comments, or average post score),
+requires downloading every reddit post via API calls, creating
+a large time cost in terms of API calls (for both the researcher and the API provider, i.e. pushshift).
+For instance, assuming an API call takes 1.1 second (1 second of sleep and 0.1 seconds of computation),
+and each call retrieves 100 posts or comments (the current pushshift max),
+in 86,400 seconds (a day), a researcher can retrieve only 7,864,500 items per day.
+As we will see below, as of 2020, a month
+of reddit data can have around 30M posts and even more comments.
+Furthermore, capturing full data uses a large amount of disk space (which may be fine for well resourced researchers, but makes it harder
 for interested parties to replicate).</p>
-<p>We propose the following sampling approach:</p>
-<p>1) divide January 2021 into one minute windows</p>
-<p>2) randomly select 1% of these windows</p>
-<p>3) collect all reddit posts for each window using the pushshift API. Then get updated post scores via PRAW.</p>
+<p>All this goes to say, we believe there is value in exploring sampling techniques to answer these
+kinds of questions.</p>
+<h2 id="Time-Window-Sampling">Time Window Sampling<a class="anchor-link" href="#Time-Window-Sampling">&#182;</a></h2><p>We propose the following sampling approach:</p>
+<p>1) divide January 2021 into one minute windows, starting at 00:00 UTC on Jan 1.</p>
+<p>2) randomly select x% of these windows (we use 1% for our initial analyses)</p>
+<p>3) collect <em>all</em> reddit posts within each selected window using the pushshift API. 
+We then get each post's updated "score" (upvotes minus downvotes) and number of comments
+via <a href="https://praw.readthedocs.io/en/latest/">PRAW</a>.</p>
 <p>4) treat this 1% sample as a "simple random sample" to produce parameter estimates for the entire month of January</p>
-<p>We are very interested in critiques of this approach! The exact sampling code is in <code>collect-wsb.ipynb</code>. Before collecting this
-data, we experimented with comparing "time window sampled" estimates with full data calculations for individual days.</p>
-<p>Returning to the main "research questions" of this notebook, we are motivated by the following broad question:</p>
-<p>when a community organizes collective action similar to the r/wallstreetbets short squeeze,
-does a platform like reddit benefit from the associated activities? Should platforms like reddit implement design features specifically
+<p>We are very interested in critiques of this approach! The exact sampling code is in <code>collect-wsb.ipynb</code>.</p>
+<p>Note, Feb 8: we are currently working on (1) describing the approach more formally and
+(2) assessing the accuracy of this approach. See the end of this cell and the <code>sampling_accuracy.ipynb</code> notebok
+for more.</p>
+<h2 id="Activity-Measures">Activity Measures<a class="anchor-link" href="#Activity-Measures">&#182;</a></h2><p>Returning to the main goals of this notebook, we aim to help answer the following broad question:</p>
+<p>When a community organizes collective action similar to the r/wallstreetbets short squeeze,
+<em>how much</em> does a platform like reddit benefit from the associated activities?
+Should platforms like reddit implement design features specifically
 to encourage such collective action, and if so what are the potential consequences?</p>
-<p>Practically speaking, we focus on three quantitative questions:</p>
+<p>Practically speaking, we focus on three measurements of reddit activity:</p>
 <p>1) How many submissions were made to r/wallstreetbets in Jan 2021?</p>
-<p>2) How many comments were made to r/wallstreetbets in Jan 2021?</p>
-<p>3) How much "post score" (which we argue is a correlate of pageviews, and thereby ad revenue) is attributable to WSB?</p>
+<p>2) What fraction of all reddit comments were posted to r/wallstreetbets in Jan 2021?</p>
+<p>3) What fraction of "post score"
+(which we argue is a correlate of pageviews, and thereby ad revenue) is attributable to WSB?</p>
 <p>Looking at each of these estimates, we contextualize them using the submissions, comments, and post score from
 other subreddits. In other words, we consider r/wallstreetbets activity relative to the rest of reddit.</p>
+<p>Summary of answers (see below for the actual code!)</p>
+<p>1) 535k submissions.
+2) 0.74-1.21%
+3) 0.42-1.17%</p>
+<h2 id="How-accurate-is-this-sampling-approach?">How accurate is this sampling approach?<a class="anchor-link" href="#How-accurate-is-this-sampling-approach?">&#182;</a></h2><p>On Feb 8, kaggle user mattpodolak shared a dataset of <a href="https://old.reddit.com/r/datasets/comments/lfbddy/all_available_posts_and_comments_from/">all r/wallstreetbets posts from Dec 6 2020 to Feb 6 2021</a>.
+This dataset provides an excellent opportunity to evaluate how closely our 1% time window sampling 
+estimates match the actual population parameters <em>for r/wallstreetbets-specific estimates</em>
+(we still need to collect every reddit post to calculate population parameters for all subreddits).
+In the future, we hope to also look at how accuracy varies with sample size
+(we expect there may be some challenges regarding the very long tail nature of reddit post scores, # comments, etc.)</p>
+<p>For now, we've started looking into accuracy in a separate notebook,
+<code>sampling_accuracy.ipynb</code>.</p>
+<p>Summary of where this stands: while our approach seems fairly accurate for estimate the total number of
+r/wallstreetbets posts, our sampling approach underestimates average post scores and number of comments.</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[66]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">glob</span>
+<span class="c1">#import glob</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">statsmodels.stats.proportion</span> <span class="kn">import</span> <span class="n">proportion_confint</span>
@@ -14353,7 +14401,7 @@ other subreddits. In other words, we consider r/wallstreetbets activity relative
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/start=2021-01-01_00:00:00_end=2021-02-01_00:00:00_n=446_seed=0/submissions_with_praw.csv&#39;</span><span class="p">)</span>
@@ -14378,7 +14426,6 @@ other subreddits. In other words, we consider r/wallstreetbets activity relative
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
 <pre>/shared-libs/python3.7/py-core/lib/python3.7/site-packages/IPython/core/interactiveshell.py:3156: DtypeWarning: Columns (78,81,84,86,87,88,89,90,91,92,93,94,95,96,97,98,99,102,105,106,107) have mixed types.Specify dtype option on import or set low_memory=False.
   interactivity=interactivity, compiler=compiler, result=result)
-Loaded 319693 submissions into a dataframe
 </pre>
 </div>
 </div>
@@ -14390,7 +14437,7 @@ Loaded 319693 submissions into a dataframe
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Below, we create some helpful date and time related columns, then look at descriptive stats</p>
+<p>Below, we create some helpful date and time related columns, then look at some relevant descriptive stats.</p>
 <ul>
 <li>we look at the subreddits with the most posts in our sample</li>
 <li>we look at descriptive stats for post score and number of comments</li>
@@ -14401,7 +14448,7 @@ Loaded 319693 submissions into a dataframe
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[89]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">created_utc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">)</span>
@@ -14418,7 +14465,7 @@ Loaded 319693 submissions into a dataframe
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[64]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="o">.</span><span class="n">subreddit</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[:</span><span class="mi">20</span><span class="p">]</span>
@@ -14437,7 +14484,7 @@ Loaded 319693 submissions into a dataframe
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[64]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 
 
 
@@ -14475,7 +14522,7 @@ Name: subreddit, dtype: int64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="p">[[</span><span class="s1">&#39;praw_num_comments&#39;</span><span class="p">,</span> <span class="s1">&#39;praw_score&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -14494,7 +14541,7 @@ Name: subreddit, dtype: int64</pre>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 
 
 
@@ -14524,43 +14571,43 @@ Name: subreddit, dtype: int64</pre>
   <tbody>
     <tr>
       <th>count</th>
-      <td>311091.000000</td>
-      <td>311091.000000</td>
+      <td>311,091.0000</td>
+      <td>311,091.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>5.562427</td>
-      <td>76.768106</td>
+      <td>5.5624</td>
+      <td>76.7681</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>79.117845</td>
-      <td>1254.992719</td>
+      <td>79.1178</td>
+      <td>1,254.9927</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>0.000000</td>
-      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>0.000000</td>
-      <td>1.000000</td>
+      <td>0.0000</td>
+      <td>1.0000</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>1.000000</td>
-      <td>1.000000</td>
+      <td>1.0000</td>
+      <td>1.0000</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>3.000000</td>
-      <td>10.000000</td>
+      <td>3.0000</td>
+      <td>10.0000</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>38079.000000</td>
-      <td>133859.000000</td>
+      <td>38,079.0000</td>
+      <td>133,859.0000</td>
     </tr>
   </tbody>
 </table>
@@ -14573,15 +14620,19 @@ Name: subreddit, dtype: int64</pre>
 
 </div>
 
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>How many posts per day?</p>
+
+</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[179]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#submissions.groupby(&#39;date&#39;).praw_score.count().sort_index(ascending=False).plot(kind=&#39;barh&#39;, figsize=(4,6))</span>
-<span class="n">posts_by_day</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
-<span class="c1">#posts_by_day</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">posts_by_day</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14592,10 +14643,10 @@ Name: subreddit, dtype: int64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[92]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">posts_by_date</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">posts_by_day</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14611,7 +14662,7 @@ Name: subreddit, dtype: int64</pre>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[92]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
 
 
@@ -14654,10 +14705,11 @@ Name: subreddit, dtype: int64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[93]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_dates</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">submissions</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">submissions</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Posts / days&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="n">n_dates</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Given this is a 1</span><span class="si">% s</span><span class="s1">ample, our estimate for total posts in Jan 2021 is&#39;</span><span class="p">)</span>
@@ -14697,16 +14749,30 @@ Given this is a 1% sample, our estimate for total posts in Jan 2021 is
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Yes, the total number of posts in the sample seems plausible given the figures reported by reddit in 2020.</p>
-<p>Below, looking at</p>
+
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<p>Next we will look at</p>
 <p>1) all posts</p>
 <p>2) posts from r/wallstreetbets</p>
-<p>we calculate the mean, standard error, and 95% confidence interval for # posts, # comments, and post score.</p>
+<p>and calculate the mean, standard error, and 95% confidence interval for</p>
+<ul>
+<li>score per post</li>
+<li>number of comments per post.</li>
+</ul>
+<p>Then, we will calculate</p>
+<ul>
+<li>a 95% confidence interval for the proportion of reddit posts from r/wallstreetbets</li>
+<li>estimated total number of posts from r/wallstreetbets.</li>
+</ul>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[118]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create a df with just r/wallstreetbets submissions</span>
@@ -14719,10 +14785,10 @@ Given this is a 1% sample, our estimate for total posts in Jan 2021 is
 </div>
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[154]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># some useful reference points:</span>
@@ -14738,31 +14804,10 @@ Given this is a 1% sample, our estimate for total posts in Jan 2021 is
 </div>
 </div>
 
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>total posts: 319693, total score: 23881867.0, total comments: 1730421.0
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[176]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># average post score and standard error for WSB posts</span>
@@ -14836,15 +14881,65 @@ In terms of percent of the Jan 2021 sum, mean: 0.97 sem: 0.12, ci: 0.74, 1.21
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[196]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Look at score and num_comments from the pushshift snapshot</span>
+<span class="c1"># (score will be lower than PRAW, but comments may be higher assuming</span>
+<span class="c1"># some comments are deleted)</span>
+<span class="n">stat_helper</span><span class="p">(</span><span class="s1">&#39;r/wallstreetbets Submissions&#39;</span><span class="p">,</span> <span class="n">wsb</span><span class="p">,</span> <span class="n">submissions</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="s1">&#39;num_comments&#39;</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>r/wallstreetbets Submissions score
+mean is 5.21 and corresponding standard error is 2.23
+95% CI: 0.87, 9.55
+In terms of percent of the Jan 2021 sum, mean: 2.39 sem: 1.02, ci: 0.40, 4.38
+
+r/wallstreetbets Submissions num_comments
+mean is 3.60 and corresponding standard error is 0.44
+95% CI: 2.74, 4.46
+In terms of percent of the Jan 2021 sum, mean: 1.06 sem: 0.13, ci: 0.81, 1.32
+
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;r/wallstreets has </span><span class="si">{:.2f}</span><span class="s1"> submissions in our sample and makes up </span><span class="si">{:.2f}</span><span class="s1"> percent of the sample&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
     <span class="n">n_wsb</span><span class="p">,</span> <span class="n">n_wsb</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">submissions</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
 <span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Because this is a 1</span><span class="si">% s</span><span class="s1">ample, we estimate that r/wallstreetbets had 535,000 of 31,969,300 total submissions.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Because this is a 1</span><span class="si">% s</span><span class="s1">ample, we estimate that r/wallstreetbets had </span><span class="si">{:.2f}</span><span class="s1"> of </span><span class="si">{:.2f}</span><span class="s1"> total submissions.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="n">n_wsb</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">n</span><span class="o">*</span><span class="mi">100</span>
+<span class="p">))</span>
 <span class="n">ci_low</span><span class="p">,</span> <span class="n">ci_upp</span> <span class="o">=</span> <span class="n">proportion_confint</span><span class="p">(</span><span class="n">n_wsb</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;95% CI for proportion: </span><span class="si">{:.2f}</span><span class="s1">, </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ci_low</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">ci_upp</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;95% CI as count: </span><span class="si">{:.2f}</span><span class="s1">, </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ci_low</span><span class="o">*</span><span class="n">n</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">ci_upp</span><span class="o">*</span><span class="n">n</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
 </pre></div>
 
      </div>
@@ -14865,8 +14960,9 @@ In terms of percent of the Jan 2021 sum, mean: 0.97 sem: 0.12, ci: 0.74, 1.21
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>r/wallstreets has 5350.00 submissions in our sample and makes up 1.67 percent of the sample
-Because this is a 1% sample, we estimate that r/wallstreetbets had 535,000 of 31,969,300 total submissions.
+Because this is a 1% sample, we estimate that r/wallstreetbets had 535000.00 of 31969300.00 total submissions.
 95% CI for proportion: 1.63, 1.72
+95% CI as count: 520784.56, 549215.44
 </pre>
 </div>
 </div>
@@ -14892,7 +14988,7 @@ each subreddit's percent of total Jan 2021 post score.</p>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[197]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;subreddit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -14911,7 +15007,7 @@ each subreddit's percent of total Jan 2021 post score.</p>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[197]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 
 
 
@@ -14947,7 +15043,7 @@ each subreddit's percent of (estimated) total Jan 2021 comments.</p>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[198]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;subreddit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
@@ -14966,7 +15062,7 @@ each subreddit's percent of (estimated) total Jan 2021 comments.</p>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[198]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
 
 
 
@@ -15001,7 +15097,7 @@ Name: praw_num_comments, dtype: float64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[199]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;subreddit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;count&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
@@ -15020,7 +15116,7 @@ Name: praw_num_comments, dtype: float64</pre>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[199]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
 
 
 
@@ -15055,7 +15151,7 @@ Name: count, dtype: float64</pre>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[165]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">counts</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;subreddit&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span>
@@ -15080,7 +15176,7 @@ Name: count, dtype: float64</pre>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[165]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
 
 
 
@@ -15249,28 +15345,28 @@ Name: count, dtype: float64</pre>
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>So far, these results seem to suggest that the huge amount of "collective action" related posts, comments,
-and votes helped put r/wallstreetbets up there with other highly active subreddits, but
-r/wallstreetbets did not necessarily blow every other subreddit 
-out of the water.</p>
+<p>So far, these results seem to suggest that during the period of "collective action"
+r/wallstreet indeed received a huge amount of posts, comments,
+and votes which made it one of the most active subreddits. However
+r/wallstreetbets did not completely dominate activity metrics.</p>
 <p>One puzzle is how these estimates relate to the claims from the above Mashable article about record
 breaking pageviews. It could be that for this unusual, attention-grabbing action,
-post score is not a good correlate for pageviews.</p>
+it may be that post score is not a good correlate for pageviews.</p>
 <p>In other words, r/wallstreetbets may have received an unusually large amount of 
-viewership without visible engagement.</p>
-<p>On the other hand, the surge in new users should be visible in this data.</p>
-<p>A simple way to unpack this data could be to ask: what would reddit activity totals have looked like without 
-r/wallstreetbets?</p>
+viewership, some of which did not create visible engagement.</p>
+<p>Another way to unpack this data could be to ask, "What would Jan 2021 reddit activity totals have looked like without 
+r/wallstreetbets"?</p>
 
 </div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[181]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">total_posts_without_wsb</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">/</span> <span class="n">total_posts_without_wsb</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">percent_of_submissions_from_wsb</span> <span class="o">=</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">/</span> <span class="n">total_posts_without_wsb</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">percent_of_submissions_from_wsb</span>
 </pre></div>
 
      </div>
@@ -15286,7 +15382,7 @@ r/wallstreetbets?</p>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[181]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
 
 
 
@@ -15304,11 +15400,12 @@ r/wallstreetbets?</p>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[169]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">total_score_without_wsb</span> <span class="o">=</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">total_score_without_wsb</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">percent_of_score_from_wsb</span> <span class="o">=</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">total_score_without_wsb</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">percent_of_score_from_wsb</span>
 </pre></div>
 
      </div>
@@ -15324,7 +15421,7 @@ r/wallstreetbets?</p>
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[169]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
 
 
 
@@ -15357,13 +15454,55 @@ estimate is almost certainly the least accurate, because low score posts, includ
 incentives for platforms to scafflod and "encourage" collective action similar to this event.</p>
 
 </div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">est_rev_using_score</span> <span class="o">=</span><span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">est_rev_using_comment_count</span> <span class="o">=</span> <span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">est_rev_using_submission_count</span> <span class="o">=</span> <span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[184]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">est_rev_using_score</span><span class="p">,</span> <span class="n">est_rev_using_comment_count</span><span class="p">,</span> <span class="n">est_rev_using_submission_count</span>
 </pre></div>
 
      </div>
@@ -15379,87 +15518,13 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[184]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>78701.57345738506</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[185]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[185]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>170427.62407141319</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[187]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="mf">9.91e6</span> <span class="o">/</span> <span class="n">submissions</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">wsb</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[187]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>96412.86715776104</pre>
+<pre>(78701.57345738506, 96412.86715776104, 170427.62407141319)</pre>
 </div>
 
 </div>
@@ -15480,7 +15545,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[162]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">wsb</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
@@ -15500,13 +15565,13 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[162]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>Text(0.5, 1.0, &#39;Total Posts&#39;)</pre>
+<pre>Text(0.5, 1.0, &#39;WSB # Posts&#39;)</pre>
 </div>
 
 </div>
@@ -15520,7 +15585,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -15534,7 +15599,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[163]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">wsb</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_score</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
@@ -15554,13 +15619,13 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[163]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>Text(0.5, 1.0, &#39;Total Score&#39;)</pre>
+<pre>Text(0.5, 1.0, &#39;WSB Summed Scores&#39;)</pre>
 </div>
 
 </div>
@@ -15574,7 +15639,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 
 
 <div class="jp-RenderedImage jp-OutputArea-output ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
@@ -15588,7 +15653,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[164]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">wsb</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;day&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">praw_num_comments</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
@@ -15608,7 +15673,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[164]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[26]:</div>
 
 
 
@@ -15642,7 +15707,7 @@ incentives for platforms to scafflod and "encourage" collective action similar t
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span> 
