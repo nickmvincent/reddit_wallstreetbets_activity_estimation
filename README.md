@@ -113,7 +113,8 @@ via [PRAW](https://praw.readthedocs.io/en/latest/).
 
 4) treat this 1% sample as a "simple random sample" to produce parameter estimates for the entire month of January
 
-Thanks to Nate TeBlunthias for several helpful observations regarding this approach.
+Thanks to Nate TeBlunthuis for several helpful observations regarding this approach:
+
 * It may useful to compare this approach to sampling techniques in ecology intended to estimate the population of a species.
 For instance, ecologists may use [quadrats](https://en.wikipedia.org/wiki/Quadrat) to collect a `rectangle` of data.
 The time window approach is a 1-d version of this.
