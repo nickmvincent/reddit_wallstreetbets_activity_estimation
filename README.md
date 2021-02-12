@@ -6,12 +6,14 @@ Currently, the data is not saved to this repo as it is rather large, although we
 `sampling_accuracy.ipynb` has early stage comparisons of parameter estimates from "time window samples" to actual population parameters
 (calculated using this [full set of posts](https://old.reddit.com/r/datasets/comments/lfbddy/all_available_posts_and_comments_from/)).
 
+`jan202_simulations.ipynb` uses a large number of simulations and data from January 2020 to compare
+time window samplings to "classic" sampling.
 
 Below is the first markdown cell from `analyze-wsb`.
 
 # Can Online Platforms Benefit from Hosting Collective Action? Estimating the Amount of Reddit Activity Attributable to r/wallstreetbets in January 2021
 ## Nicholas Vincent and Hanlin Li, Northwestern University
-Last updated Feb 8, 2020
+### Last updated Feb 8, 2020
 
 ## Preface and TLDR
 *Preface/caveat: This is a rough draft/work-in-progress notebook, intended as an early
@@ -21,10 +23,11 @@ regarding the framing, assumptions, and methods choices. The first author takes
 all responsibility for errors in code or claims*.
 
 *Summary/TLDR: using a sample of reddit submissions (sampled by collecting all submissions for a
-random set of one minute time windows), we estimate that r/wallstreetbets was responsible for
-1.63-1.72% of all Reddit posts, 0.74-1.21% of all comments, and 0.42-1.17% of
-total "post scores" in January 2021,
-driven by the surge of activity at the end of the month. 
+random set of one minute time windows) to calculate standard 99% confidence intervals,
+we estimate that r/wallstreetbets was responsible for
+1.52% to 1.57% of all Reddit posts, 0.55% to 3.04% of all comments, and 0.58% to 1.51% of
+total "post scores" in January 2021.
+Much of this activity occurred in a at the end of the month. 
 These estimates suggest that platforms like reddit may have a
 powerful incentive to support future instances of "collective action" that are similar to
 the "r/wallstreetbets short squeeze".*
@@ -102,7 +105,7 @@ We propose the following sampling approach:
 
 1) divide January 2021 into one minute windows, starting at 00:00 UTC on Jan 1.
 
-2) randomly select x% of these windows (we use 1% for our initial analyses)
+2) randomly select x% of these windows.
 
 3) collect *all* reddit posts within each selected window using the pushshift API. 
 We then get each post's updated "score" (upvotes minus downvotes) and number of comments
@@ -110,11 +113,27 @@ via [PRAW](https://praw.readthedocs.io/en/latest/).
 
 4) treat this 1% sample as a "simple random sample" to produce parameter estimates for the entire month of January
 
-We are very interested in critiques of this approach! The exact sampling code is in `collect-wsb.ipynb`.
+Thanks to Nate TeBlunthias for several helpful observations regarding this approach.
+* It may useful to compare this approach to sampling techniques in ecology intended to estimate the population of a species.
+For instance, ecologists may use [quadrats](https://en.wikipedia.org/wiki/Quadrat) to collect a `rectangle` of data.
+The time window approach is a 1-d version of this.
+* This approach could be viewed as a case of the [law of total expectation](https://en.wikipedia.org/wiki/Law_of_total_expectation).
+The variable $x$ being our measures of interest (post score, post comment count, total posts), and the conditioning variable $y$ referring the time window in
+which a post appears.
 
-Note, Feb 8: we are currently working on (1) describing the approach more formally and
-(2) assessing the accuracy of this approach. See the end of this cell and the `sampling_accuracy.ipynb` notebok
-for more.
+
+We are very interested in collecting more critiques of this approach!
+The exact sampling code is in `collect-wsb.ipynb`.
+
+Some open questions:
+* should the time windows actually be extended by something like 0.001 seconds
+(i.e. does the current version excluded posts made at exact minute intervals?)
+* What is the ideal window size for a given sample fraction (we're trying out some simulations to answer this).
+
+Note, we are currently working on (1) describing the approach more formally and
+(2) assessing the accuracy of this approach. See the end of this cell, the `sampling_accuracy.ipynb` notebok
+for more, and the `jan2020_simulations.ipynb` for more.
+
 
 ## Activity Measures
 
@@ -151,8 +170,8 @@ estimates match the actual population parameters *for r/wallstreetbets-specific 
 In the future, we hope to also look at how accuracy varies with sample size
 (we expect there may be some challenges regarding the very long tail nature of reddit post scores, # comments, etc.)
 
-For now, we've started looking into accuracy in a separate notebook,
-`sampling_accuracy.ipynb`.
-
 Summary of where this stands: while our approach seems fairly accurate for estimate the total number of
 r/wallstreetbets posts, our sampling approach underestimates average post scores and number of comments.
+
+
+

@@ -2,3 +2,5 @@ praw
 requests-cache
 asyncpraw
 statsmodels==0.12.2
+zstandard==0.15.1
+bootstrapped
